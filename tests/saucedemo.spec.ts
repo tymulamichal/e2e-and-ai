@@ -1,16 +1,17 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/sourcedemo/LoginPage';
 
+test.beforeEach(async ({ page }) => {
+  const loginPage = new LoginPage(page);
+  await loginPage.open();
+  await loginPage.login('standard_user', 'secret_sauce');
+});
 
-test.only('standard user login test', async ({ page }) => {
-    const loginPage = new LoginPage(page);
-    await loginPage.open();
-    await loginPage.login('standard_user', 'secret_sauce');
-    
-    await expect(page.getByText('Swag Labs')).toBeVisible();
-    await expect(page.locator('[data-test="inventory-list"]')).toBeVisible();
-    await expect(page.locator('[data-test="title"]')).toContainText('Products');
-  });
+test('standard user login test', async ({ page }) => {
+  await expect(page.getByText('Swag Labs')).toBeVisible();
+  await expect(page.locator('[data-test="inventory-list"]')).toBeVisible();
+  await expect(page.locator('[data-test="title"]')).toContainText('Products');
+});
 
 test('go to product page', async ({ page }) => {
   await page.goto('https://www.saucedemo.com/inventory.html');
@@ -24,11 +25,11 @@ test('go to product page', async ({ page }) => {
 });
 
 test('add to cart', async ({ page }) => {
-    await page.goto('https://www.saucedemo.com/inventory-item.html?id=4');
-    await page.locator('[data-test="add-to-cart"]').click();
-    await expect(page.locator('[data-test="remove"]')).toBeVisible();
-    await page.locator('[data-test="shopping-cart-link"]').click();
-  });
+  await page.goto('https://www.saucedemo.com/inventory-item.html?id=4');
+  await page.locator('[data-test="add-to-cart"]').click();
+  await expect(page.locator('[data-test="remove"]')).toBeVisible();
+  await page.locator('[data-test="shopping-cart-link"]').click();
+});
 
 test('cart page', async ({ page }) => {
   await page.goto('https://www.saucedemo.com/cart.html');
