@@ -1,14 +1,11 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/sourcedemo/LoginPage';
 
 
 test.only('standard user login test', async ({ page }) => {
-    await page.goto('https://www.saucedemo.com/');
-    await page.locator('[data-test="username"]').click();
-    await page.locator('[data-test="username"]').fill('standard_user');
-    await page.locator('[data-test="username"]').press('Tab');
-    await page.locator('[data-test="password"]').fill('secret_sauce');
-    await page.locator('[data-test="login-button"]').click();
-    
+    const loginPage = new LoginPage(page);
+    await loginPage.open();
+    await loginPage.login('standard_user', 'secret_sauce');
     
     await expect(page.getByText('Swag Labs')).toBeVisible();
     await expect(page.locator('[data-test="inventory-list"]')).toBeVisible();

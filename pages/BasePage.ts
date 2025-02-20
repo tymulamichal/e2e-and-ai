@@ -9,6 +9,7 @@ export class BasePage {
   urlPath: string;
   // declare all locators here, example:
   readonly title: Locator;
+  readonly shoppingCartLink: Locator;
   
 
   /**
@@ -19,6 +20,8 @@ export class BasePage {
     this.page = page;
     // assign all locators here, example:
     // this.title = this.page.getByRole("heading", { name: "Welcome" });
+    this.title = page.locator('[data-test="title"]');
+    this.shoppingCartLink = page.locator('[data-test="shopping-cart-link"]');
   }
 
   /**
@@ -37,4 +40,10 @@ export class BasePage {
  
   }
 
+  /**
+   * Gets the page title text
+   */
+  async getTitleText(): Promise<string | null> {
+    return await this.title.textContent();
+  }
 }
