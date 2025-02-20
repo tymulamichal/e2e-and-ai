@@ -5,6 +5,7 @@ import { ProductPage } from '../pages/sourcedemo/ProductPage';
 import { CartPage } from '../pages/sourcedemo/CartPage';
 import { CheckoutPage } from '../pages/sourcedemo/CheckoutPage';
 import { CheckoutCompletePage } from '../pages/sourcedemo/CheckoutCompletePage';
+import { generateLoginCredentials, generateUserInfo } from '../utils/dataGenerators';
 
 /**
  * Test suite for the Sauce Demo e-commerce flow.
@@ -18,8 +19,9 @@ test.describe('Sauce Demo E-commerce Flow', () => {
    */
   test.beforeEach(async ({ page }) => {
     const loginPage = new LoginPage(page);
+    const { username, password } = generateLoginCredentials();
     await loginPage.open();
-    await loginPage.login('standard_user', 'secret_sauce');
+    await loginPage.login(username, password);
   });
 
   /**
@@ -94,6 +96,7 @@ test.describe('Sauce Demo E-commerce Flow', () => {
   test('checkout page', async ({ page }) => {
     const cartPage = new CartPage(page);
     const checkoutPage = new CheckoutPage(page);
+    const { firstName, lastName, postalCode } = generateUserInfo();
     
     await cartPage.open();
     await cartPage.proceedToCheckout();
@@ -102,7 +105,7 @@ test.describe('Sauce Demo E-commerce Flow', () => {
     await expect(checkoutPage.title).toContainText('Checkout: Your Information');
     await expect(checkoutPage.checkoutInfo).toBeVisible();
     
-    await checkoutPage.fillShippingInfo('Yan', 'Ush', '123456');
+    await checkoutPage.fillShippingInfo(firstName, lastName, postalCode);
     await checkoutPage.continue();
     
     await expect(checkoutPage.title).toBeVisible();
